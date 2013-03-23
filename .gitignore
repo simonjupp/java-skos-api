@@ -1,0 +1,5 @@
+*.iml
+*.idea
+.DS_Store
+skos-core/target
+skos-impl/target
