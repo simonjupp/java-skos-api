@@ -92,8 +92,8 @@ public class SKOSDatasetImpl implements SKOSDataset {
     }
 
     public URI getURI() {
-        if (owlOntology.getOntologyID() == null) {
-            return URI.create("http://www.semanticweb.org/" + Math.random());
+        if (owlOntology.getOntologyID().getOntologyIRI() == null) {
+            return URI.create("http://skosapi.sourceforge.net/anonymous/" + Math.random());
         }
         return owlOntology.getOntologyID().getOntologyIRI().toURI();
     }

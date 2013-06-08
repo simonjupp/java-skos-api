@@ -145,7 +145,7 @@ public class SKOSManager implements SKOSContentManager {
 
         SKOSDatasetImpl voc = new SKOSDatasetImpl(this, onto);
         if (voc.getURI() != null) {
-            System.err.println("new ontology loaded: " + voc.getAsOWLOntology().getOntologyID());
+            System.out.println("new ontology loaded: " + voc.getAsOWLOntology().getOntologyID());
             skosVocabularies.put(voc.getURI(), voc);
         }
         return voc;

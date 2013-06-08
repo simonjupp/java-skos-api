@@ -5,7 +5,7 @@
     <parent>
         <artifactId>skos-api</artifactId>
         <groupId>skos-api</groupId>
-        <version>1.0</version>
+        <version>3.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,13 +16,13 @@
         <dependency>
             <groupId>skos-api</groupId>
             <artifactId>skos-core</artifactId>
-            <version>1.0</version>
+            <version>3.1</version>
         </dependency>
 
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
-            <version>3.4.3</version>
+            <version>3.4.4</version>
         </dependency>
 
     </dependencies>

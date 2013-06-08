@@ -1,8 +1,5 @@
 package example;
 
-import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
-import com.clarkparsia.pellet.owlapiv3.Reasoner;
-import org.mindswap.pellet.jena.PelletReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.BufferingMode;
@@ -110,23 +107,23 @@ public class ReadInferredSKOS {
                 System.out.println("imports:"+ o.toString());
             }
 
-           OWLReasoner reasoner= new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory().createReasoner(converter.getAsOWLOntology(dataSet));
+//           OWLReasoner reasoner= new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory().createReasoner(converter.getAsOWLOntology(dataSet));
 
-            SKOSReasoner skosreasoner = new SKOSReasoner(manager, reasoner, converter.getAsOWLOntology(skosCoreOntology));
-
-            for (SKOSConcept con : skosreasoner.getSKOSConcepts()) {
-
-                for (SKOSAnnotation literal : con.getSKOSAnnotationsByURI(dataSet, manager.getSKOSDataFactory().getSKOSPrefLabelProperty().getURI())) {
-                    System.err.println("Concept label: " + literal.getAnnotationValueAsConstant().getLiteral());
-                }
-
-                for (SKOSConcept broaderCon : skosreasoner.getSKOSNarrowerTransitiveConcepts(con)) {
-                    for (SKOSAnnotation literal : broaderCon.getSKOSAnnotationsByURI(dataSet, manager.getSKOSDataFactory().getSKOSPrefLabelProperty().getURI())) {
-                        System.err.println("Narrower concepts: " + literal.getAnnotationValueAsConstant().getLiteral());
-                    }
-                }
-
-            }
+//            SKOSReasoner skosreasoner = new SKOSReasoner(manager, reasoner, converter.getAsOWLOntology(skosCoreOntology));
+//
+//            for (SKOSConcept con : skosreasoner.getSKOSConcepts()) {
+//
+//                for (SKOSAnnotation literal : con.getSKOSAnnotationsByURI(dataSet, manager.getSKOSDataFactory().getSKOSPrefLabelProperty().getURI())) {
+//                    System.err.println("Concept label: " + literal.getAnnotationValueAsConstant().getLiteral());
+//                }
+//
+//                for (SKOSConcept broaderCon : skosreasoner.getSKOSNarrowerTransitiveConcepts(con)) {
+//                    for (SKOSAnnotation literal : broaderCon.getSKOSAnnotationsByURI(dataSet, manager.getSKOSDataFactory().getSKOSPrefLabelProperty().getURI())) {
+//                        System.err.println("Narrower concepts: " + literal.getAnnotationValueAsConstant().getLiteral());
+//                    }
+//                }
+//
+//            }
 
 
 
