@@ -173,7 +173,7 @@ public class CreateSKOSExample {
             man.applyChanges(addList);
 
             System.err.println("writing ontology");
-            man.save(vocab, SKOSFormatExt.RDFXML, URI.create("file:/Users/jupp/tmp/testskos.rdf"));
+            man.save(vocab, SKOSFormatExt.RDFXML, URI.create("file:/Users/jupp/tmp/testskos/testskos.rdf"));
 
         } catch (SKOSChangeException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

@@ -45,10 +45,10 @@ public class SKOSUntypedLiteralImpl implements SKOSUntypedLiteral {
         this.lang = lang;
         this.literal = literal;
         if (lang == null) {
-            this.constant = factory.getOWLStringLiteral(literal);
+            this.constant = factory.getOWLLiteral(literal);
         }
         else {
-            this.constant = factory.getOWLStringLiteral(literal, lang);
+            this.constant = factory.getOWLLiteral(literal, lang);
         }
     }
 

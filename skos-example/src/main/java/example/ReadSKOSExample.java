@@ -1,12 +1,13 @@
 package example;
 
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.skos.*;
 import org.semanticweb.skosapibinding.SKOSManager;
 import org.semanticweb.skosapibinding.SKOStoOWLConverter;
 
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
  * Copyright (C) 2007, University of Manchester
@@ -46,7 +47,9 @@ public class ReadSKOSExample {
             final SKOSManager man = new SKOSManager();
 //
             SKOSDataset dataSet = man.loadDatasetFromPhysicalURI(URI.create("file:/Users/simon/ontologies/skos/agrovoc_2007_SKOS/ag_skos_20070219.rdf"));
-//
+
+            //////
+
             // print out all concepts;
             for (SKOSConcept concept : dataSet.getSKOSConcepts()) {
                 System.out.println("Concept: " + concept.getURI());

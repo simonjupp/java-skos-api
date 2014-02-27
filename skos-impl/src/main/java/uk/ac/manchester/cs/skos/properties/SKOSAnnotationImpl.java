@@ -62,7 +62,7 @@ public class SKOSAnnotationImpl implements SKOSAnnotation {
         }
         else {
             owlAnnotation = factory.getOWLAnnotation(
-                    factory.getOWLAnnotationProperty(IRI.create(uri)), factory.getOWLLiteral(owlLiteral.getLiteral(), OWL2Datatype.RDF_XML_LITERAL));
+                    factory.getOWLAnnotationProperty(IRI.create(uri)), owlLiteral);
 
         }
 
