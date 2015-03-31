@@ -1,15 +1,11 @@
 package uk.ac.manchester.cs.skos;
 
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
-import org.semanticweb.owlapi.util.PropertyAssertionValueShortFormProvider;
-import org.semanticweb.skos.*;
-import org.semanticweb.skos.extensions.SKOSLabelRelation;
-import org.semanticweb.skosapibinding.SKOSManager;
-import org.semanticweb.skosapibinding.SKOStoOWLConverter;
-
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 /*
  * Copyright (C) 2007, University of Manchester
  *
@@ -32,6 +28,52 @@ import java.util.*;
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+import java.util.Set;
+
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationObjectVisitor;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
+import org.semanticweb.owlapi.search.EntitySearcher;
+import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
+import org.semanticweb.owlapi.util.PropertyAssertionValueShortFormProvider;
+import org.semanticweb.skos.SKOSAnnotation;
+import org.semanticweb.skos.SKOSConcept;
+import org.semanticweb.skos.SKOSConceptScheme;
+import org.semanticweb.skos.SKOSCreationException;
+import org.semanticweb.skos.SKOSDataProperty;
+import org.semanticweb.skos.SKOSDataRelationAssertion;
+import org.semanticweb.skos.SKOSDataType;
+import org.semanticweb.skos.SKOSDataset;
+import org.semanticweb.skos.SKOSEntity;
+import org.semanticweb.skos.SKOSLiteral;
+import org.semanticweb.skos.SKOSObjectProperty;
+import org.semanticweb.skos.SKOSObjectRelationAssertion;
+import org.semanticweb.skos.SKOSResource;
+import org.semanticweb.skos.extensions.SKOSLabelRelation;
+import org.semanticweb.skosapibinding.SKOSManager;
+import org.semanticweb.skosapibinding.SKOStoOWLConverter;
 
 /**
  * Author: Simon Jupp<br>
@@ -92,10 +134,10 @@ public class SKOSDatasetImpl implements SKOSDataset {
     }
 
     public URI getURI() {
-        if (owlOntology.getOntologyID().getOntologyIRI() == null) {
+        if (!owlOntology.getOntologyID().getOntologyIRI().isPresent()) {
             return URI.create("http://skosapi.sourceforge.net/anonymous/" + Math.random());
         }
-        return owlOntology.getOntologyID().getOntologyIRI().toURI();
+        return owlOntology.getOntologyID().getOntologyIRI().get().toURI();
     }
 
     public Set<SKOSConceptScheme> getSKOSConceptSchemes() {
@@ -192,7 +234,7 @@ public class SKOSDatasetImpl implements SKOSDataset {
 
     private SKOSEntity entityCreationHandler(OWLNamedIndividual ind) {
 
-        for (OWLClassExpression desc : ind.getTypes(owlOntology)) {
+        for (OWLClassExpression desc : EntitySearcher.getTypes(ind, owlOntology)) {
 
             if (desc instanceof OWLClass) {
 
@@ -392,7 +434,7 @@ public class SKOSDatasetImpl implements SKOSDataset {
 
         AnnotationVisitor annoVis = new AnnotationVisitor(skosManContent);
 
-        for (OWLAnnotation anno : ind.asOWLNamedIndividual().getAnnotations(owlOntology)) {
+        for (OWLAnnotation anno : EntitySearcher.getAnnotations(ind.asOWLNamedIndividual(), owlOntology)) {
 
             OWLAnnotationValue value = anno.getValue();
             value.accept(annoVis);
@@ -509,7 +551,7 @@ public class SKOSDatasetImpl implements SKOSDataset {
         OWLDataPropertyExpression prop2 = man.getOWLDataFactory().getOWLDataProperty(IRI.create(SKOSRDFVocabulary.ALTLABEL.getURI()));
         OWLDataPropertyExpression prop3 = man.getOWLDataFactory().getOWLDataProperty(IRI.create(SKOSRDFVocabulary.HIDDENLABEL.getURI()));
 
-        List<OWLPropertyExpression<?,?>> list = new ArrayList<OWLPropertyExpression<?,?>>();
+        List<OWLPropertyExpression> list = new ArrayList<OWLPropertyExpression>();
         list.add(prop3);
         list.add(prop2);
         list.add(prop1);
