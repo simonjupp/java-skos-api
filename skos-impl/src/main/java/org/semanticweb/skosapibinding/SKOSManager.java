@@ -1,15 +1,11 @@
 package org.semanticweb.skosapibinding;
 
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
-import org.semanticweb.skos.*;
-import uk.ac.manchester.cs.skos.SKOSDataFactoryImpl;
-import uk.ac.manchester.cs.skos.SKOSDatasetImpl;
-
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 /*
  * Copyright (C) 2007, University of Manchester
  *
@@ -32,6 +28,35 @@ import java.util.*;
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
+import org.semanticweb.owlapi.model.AddAxiom;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.OWLOntologyChangeException;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.semanticweb.owlapi.model.RemoveAxiom;
+import org.semanticweb.owlapi.model.parameters.ChangeApplied;
+import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
+import org.semanticweb.skos.SKOSAssertion;
+import org.semanticweb.skos.SKOSChange;
+import org.semanticweb.skos.SKOSChangeException;
+import org.semanticweb.skos.SKOSContentManager;
+import org.semanticweb.skos.SKOSCreationException;
+import org.semanticweb.skos.SKOSDataFactory;
+import org.semanticweb.skos.SKOSDataset;
+import org.semanticweb.skos.SKOSFormat;
+import org.semanticweb.skos.SKOSInputSource;
+import org.semanticweb.skos.SKOSStorageException;
+import org.semanticweb.skos.SKOSUnkownFormatException;
+
+import uk.ac.manchester.cs.skos.SKOSDataFactoryImpl;
+import uk.ac.manchester.cs.skos.SKOSDatasetImpl;
 
 /**
  * Author: Simon Jupp<br>
@@ -68,10 +93,7 @@ public class SKOSManager implements SKOSContentManager {
         skosVocabularies = new HashMap<URI, SKOSDatasetImpl>();
 
         for (OWLOntology ont : man.getOntologies()) {
-            IRI iri = ont.getOntologyID().getOntologyIRI();
-            if (iri == null) {
-                iri = IRI.generateDocumentIRI();
-            }
+            IRI iri = ont.getOntologyID().getOntologyIRI().or(IRI.generateDocumentIRI());
             skosVocabularies.put(iri.toURI(), new SKOSDatasetImpl(this, ont));
         }
     }
@@ -167,18 +189,18 @@ public class SKOSManager implements SKOSContentManager {
     public void save (SKOSDataset vocab, SKOSFormat format) throws SKOSStorageException {
         SKOSDatasetImpl setImpl = (SKOSDatasetImpl) vocab;
         try {
-            man.saveOntology(setImpl.getAsOWLOntology(), (OWLOntologyFormat) format.getFormat());
+            man.saveOntology(setImpl.getAsOWLOntology(), (OWLDocumentFormat) format.getFormat());
         } catch (OWLOntologyStorageException e) {
-            new SKOSStorageException(e);
+           throw new SKOSStorageException(e);
         } catch (SKOSUnkownFormatException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 }
 
     public void save (SKOSDataset vocab, SKOSFormat format, URI uri) throws SKOSStorageException {
         SKOSDatasetImpl setImpl = (SKOSDatasetImpl) vocab;
         try {
-            man.saveOntology(setImpl.getAsOWLOntology(), new RDFXMLOntologyFormat(), IRI.create(uri));
+            man.saveOntology(setImpl.getAsOWLOntology(), new RDFXMLDocumentFormat(), IRI.create(uri));
         } catch (OWLOntologyStorageException e) {
             new SKOSStorageException(e);
         }
@@ -245,16 +267,18 @@ public class SKOSManager implements SKOSContentManager {
 
         List<SKOSChange> succesfulChanges = new ArrayList<SKOSChange>();
 
-        List<OWLOntologyChange> OWLChange = new ArrayList<OWLOntologyChange>();
         try {
-            OWLAxiomChange cha;
             if (change.isAdd()) {
                 AddAxiom addAx = util.getAddAxiom();
-                OWLChange = man.applyChange(addAx);
+                if (man.applyChange(addAx) == ChangeApplied.SUCCESSFULLY) {
+                    succesfulChanges.add(change);
+                }
             }
             else if (change.isRemove()) {
                 RemoveAxiom remAx = util.getRemoveAxiom();
-                OWLChange = man.applyChange(remAx);
+                if (man.applyChange(remAx) == ChangeApplied.SUCCESSFULLY) {
+                    succesfulChanges.add(change);
+                }
             }
         } catch (OWLOntologyChangeException e) {
             throw new SKOSChangeException(change, e);

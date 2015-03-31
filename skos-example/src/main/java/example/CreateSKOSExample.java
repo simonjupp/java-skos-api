@@ -1,13 +1,5 @@
 package example;
 
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
-import org.semanticweb.skos.*;
-import org.semanticweb.skos.properties.SKOSAltLabelProperty;
-import org.semanticweb.skosapibinding.SKOSFormatExt;
-import org.semanticweb.skosapibinding.SKOSManager;
-import org.semanticweb.skosapibinding.SKOStoOWLConverter;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +25,38 @@ import java.util.List;
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+import org.semanticweb.owlapi.model.AddAxiom;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntologyChangeException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
+import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
+import org.semanticweb.skos.AddAssertion;
+import org.semanticweb.skos.SKOSAnnotation;
+import org.semanticweb.skos.SKOSAnnotationAssertion;
+import org.semanticweb.skos.SKOSAnnotationProperty;
+import org.semanticweb.skos.SKOSChange;
+import org.semanticweb.skos.SKOSChangeException;
+import org.semanticweb.skos.SKOSConcept;
+import org.semanticweb.skos.SKOSConceptScheme;
+import org.semanticweb.skos.SKOSCreationException;
+import org.semanticweb.skos.SKOSDataFactory;
+import org.semanticweb.skos.SKOSDataRelationAssertion;
+import org.semanticweb.skos.SKOSDataset;
+import org.semanticweb.skos.SKOSEntity;
+import org.semanticweb.skos.SKOSEntityAssertion;
+import org.semanticweb.skos.SKOSLiteral;
+import org.semanticweb.skos.SKOSObject;
+import org.semanticweb.skos.SKOSObjectRelationAssertion;
+import org.semanticweb.skos.SKOSResource;
+import org.semanticweb.skos.SKOSStorageException;
+import org.semanticweb.skos.SKOSTypedLiteral;
+import org.semanticweb.skos.SKOSUntypedLiteral;
+import org.semanticweb.skos.properties.SKOSAltLabelProperty;
+import org.semanticweb.skosapibinding.SKOSFormatExt;
+import org.semanticweb.skosapibinding.SKOSManager;
+import org.semanticweb.skosapibinding.SKOStoOWLConverter;
 
 /**
  * Author: Simon Jupp<br>
@@ -122,10 +146,10 @@ public class CreateSKOSExample {
         * here is an example adding a dc:creator and a rdfs:comment
         */
 
-        SKOSAnnotation anno1 = factory.getSKOSAnnotation(DublinCoreVocabulary.DATE.getURI(), "12-07-2008");
-        SKOSAnnotation anno2 = factory.getSKOSAnnotation(DublinCoreVocabulary.CREATOR.getURI(), "Simon Jupp", "en");
+        SKOSAnnotation anno1 = factory.getSKOSAnnotation(DublinCoreVocabulary.DATE.getIRI().toURI(), "12-07-2008");
+        SKOSAnnotation anno2 = factory.getSKOSAnnotation(DublinCoreVocabulary.CREATOR.getIRI().toURI(), "Simon Jupp", "en");
         SKOSAnnotation anno3 = factory.getSKOSAnnotation(URI.create("http://my-custom-annotation.com/example"), someResource);
-        SKOSAnnotation anno4 = factory.getSKOSAnnotation(DublinCoreVocabulary.CREATOR.getURI(),  factory.getSKOSUntypedConstant("Simon Jupp", "en"));
+        SKOSAnnotation anno4 = factory.getSKOSAnnotation(DublinCoreVocabulary.CREATOR.getIRI().toURI(),  factory.getSKOSUntypedConstant("Simon Jupp", "en"));
         // todo need to work on typed on objects
         //factory.getSKOSAnnotationsByURI(DublinCoreVocabulary.CREATOR.getURI(),  factory.getSKOSTypedConstant("String", "Simon Jupp"));
 

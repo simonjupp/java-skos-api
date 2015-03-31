@@ -1,8 +1,7 @@
 package uk.ac.manchester.cs.skos;
 
-import org.semanticweb.owlapi.model.*;
-
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 /*
@@ -27,6 +26,13 @@ import java.util.Map;
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 /**
  * Author: Simon Jupp<br>
@@ -69,9 +75,10 @@ public class SKOSObjectPropertyUtility {
 
     private void processProperty(OWLObjectProperty prop, OWLOntology ont) {
 
-        if (!prop.getSuperProperties(ont).isEmpty()) {
+        Collection<OWLObjectPropertyExpression> superProperties = EntitySearcher.getSuperProperties(prop, ont);
+        if (!superProperties.isEmpty()) {
             tempProperty.put(prop.getIRI().toURI(), prop);
-            for(OWLObjectPropertyExpression sup : prop.getSuperProperties(ont)) {
+            for(OWLObjectPropertyExpression sup : superProperties) {
                 processProperty(sup.asOWLObjectProperty(), ont);
             }
         }

@@ -1,16 +1,5 @@
 package example;
 
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.BufferingMode;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
-import org.semanticweb.skos.*;
-import org.semanticweb.skosapibinding.SKOSFormatExt;
-import org.semanticweb.skosapibinding.SKOSManager;
-import org.semanticweb.skosapibinding.SKOSReasoner;
-import org.semanticweb.skosapibinding.SKOStoOWLConverter;
-
 import java.net.URI;
 /*
  * Copyright (C) 2007, University of Manchester
@@ -34,6 +23,16 @@ import java.net.URI;
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+import org.semanticweb.owlapi.model.AddImport;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLImportsDeclaration;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.parameters.ChangeApplied;
+import org.semanticweb.skos.SKOSCreationException;
+import org.semanticweb.skos.SKOSDataset;
+import org.semanticweb.skosapibinding.SKOSManager;
+import org.semanticweb.skosapibinding.SKOStoOWLConverter;
 
 /**
  * Author: Simon Jupp<br>
@@ -95,8 +94,9 @@ public class ReadInferredSKOS {
 
             OWLImportsDeclaration importsDec = manager.getOWLManger().getOWLDataFactory().getOWLImportsDeclaration(IRI.create ("http://www.w3.org/2004/02/skos/core"));
 
-            for (OWLOntologyChange change: manager.getOWLManger().applyChange(new AddImport(mySkosAsOWLOntology, importsDec))) {
-                System.out.println(change.toString());
+            AddImport addImport = new AddImport(mySkosAsOWLOntology, importsDec);
+            if( manager.getOWLManger().applyChange(addImport)==ChangeApplied.SUCCESSFULLY) {
+                System.out.println(addImport.toString());
             }
 
 //            SKOSDataset skosCoreOntology = manager.loadDataset(URI.create("http://www.w3.org/2004/02/skos/core"));

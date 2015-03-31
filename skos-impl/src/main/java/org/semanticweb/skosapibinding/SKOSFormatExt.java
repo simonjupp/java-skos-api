@@ -1,10 +1,11 @@
 package org.semanticweb.skosapibinding;
 
-import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxOntologyFormat;
-import org.coode.owlapi.turtle.TurtleOntologyFormat;
-import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
-import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
-import org.semanticweb.owlapi.model.OWLOntologyFormat;
+import org.semanticweb.owlapi.formats.ManchesterSyntaxDocumentFormatFactory;
+import org.semanticweb.owlapi.formats.OWLXMLDocumentFormatFactory;
+import org.semanticweb.owlapi.formats.RDFXMLDocumentFormatFactory;
+import org.semanticweb.owlapi.formats.TurtleDocumentFormatFactory;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
+import org.semanticweb.owlapi.model.OWLDocumentFormatFactory;
 import org.semanticweb.skos.SKOSFormat;
 import org.semanticweb.skos.SKOSUnkownFormatException;
 
@@ -41,37 +42,23 @@ public enum SKOSFormatExt implements SKOSFormat {
 
 //    RDFXML(new OWLXMLVocabulary());
 
-    RDFXML("RDFXML") ,
+    RDFXML(new RDFXMLDocumentFormatFactory()) ,
 
-    TURTRLE("TURTLE"),
+    TURTRLE(new TurtleDocumentFormatFactory()),
 
-    OWLXML("OWLXML"),
+    OWLXML(new OWLXMLDocumentFormatFactory()),
 
-    MOS("MOS");
+    MOS(new ManchesterSyntaxDocumentFormatFactory());
 
-    private String localName;
+    private OWLDocumentFormatFactory factory;
 
 
-    SKOSFormatExt(String localname) {
-        this.localName = localname;
+    SKOSFormatExt(OWLDocumentFormatFactory factory) {
+        this.factory=factory;
     }
 
 
-    public OWLOntologyFormat getFormat() throws SKOSUnkownFormatException {
-
-        if (localName.equals("RDFXML")) {
-            return new RDFXMLOntologyFormat();
-        }
-        else if (localName.equals("OWLXML")) {
-            return new OWLXMLOntologyFormat();
-        }
-        else if (localName.equals("MOS")) {
-            return new ManchesterOWLSyntaxOntologyFormat();
-        }
-        else if (localName.equals("TURTLE")) {
-            return new TurtleOntologyFormat();
-        }
-
-        throw new SKOSUnkownFormatException("Unknown format: " + localName);
+    public OWLDocumentFormat getFormat() throws SKOSUnkownFormatException {
+        return factory.createFormat();
     }
 }
