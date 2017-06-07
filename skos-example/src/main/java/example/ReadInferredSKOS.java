@@ -2,6 +2,7 @@ package example;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.ChangeApplied;
 import org.semanticweb.owlapi.reasoner.BufferingMode;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
@@ -95,8 +96,9 @@ public class ReadInferredSKOS {
 
             OWLImportsDeclaration importsDec = manager.getOWLManger().getOWLDataFactory().getOWLImportsDeclaration(IRI.create ("http://www.w3.org/2004/02/skos/core"));
 
-            for (OWLOntologyChange change: manager.getOWLManger().applyChange(new AddImport(mySkosAsOWLOntology, importsDec))) {
-                System.out.println(change.toString());
+            ChangeApplied change = manager.getOWLManger().applyChange(new AddImport(mySkosAsOWLOntology, importsDec));
+            if (null != change) {
+            	System.out.println(change.toString());
             }
 
 //            SKOSDataset skosCoreOntology = manager.loadDataset(URI.create("http://www.w3.org/2004/02/skos/core"));
