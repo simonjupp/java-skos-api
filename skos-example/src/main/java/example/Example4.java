@@ -3,6 +3,7 @@ package example;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.skos.SKOSCreationException;
 import org.semanticweb.skos.SKOSDataFactory;
 import org.semanticweb.skos.SKOSDataset;
@@ -59,7 +60,7 @@ public class Example4 {
             // get the SKOS dataset as an owl ontology object
             OWLOntology onto = conv.getAsOWLOntology(dataset);
             //query the owl ontology for superproperties
-            for (OWLObjectPropertyExpression prop : owlPartOf.getSuperProperties(onto)) {
+            for (OWLObjectPropertyExpression prop : EntitySearcher.getSuperProperties(owlPartOf, onto)) {
                 System.out.println(prop.asOWLObjectProperty().getIRI());
             }
 

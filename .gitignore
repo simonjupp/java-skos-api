@@ -4,3 +4,7 @@
 *.class
 *.class
 target/
+.project
+.classpath
+*.core.prefs
+.jazzignore

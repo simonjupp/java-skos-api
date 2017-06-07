@@ -122,10 +122,10 @@ public class CreateSKOSExample {
         * here is an example adding a dc:creator and a rdfs:comment
         */
 
-        SKOSAnnotation anno1 = factory.getSKOSAnnotation(DublinCoreVocabulary.DATE.getURI(), "12-07-2008");
-        SKOSAnnotation anno2 = factory.getSKOSAnnotation(DublinCoreVocabulary.CREATOR.getURI(), "Simon Jupp", "en");
+        SKOSAnnotation anno1 = factory.getSKOSAnnotation(DublinCoreVocabulary.DATE.getIRI().toURI(), "12-07-2008");
+        SKOSAnnotation anno2 = factory.getSKOSAnnotation(DublinCoreVocabulary.CREATOR.getIRI().toURI(), "Simon Jupp", "en");
         SKOSAnnotation anno3 = factory.getSKOSAnnotation(URI.create("http://my-custom-annotation.com/example"), someResource);
-        SKOSAnnotation anno4 = factory.getSKOSAnnotation(DublinCoreVocabulary.CREATOR.getURI(),  factory.getSKOSUntypedConstant("Simon Jupp", "en"));
+        SKOSAnnotation anno4 = factory.getSKOSAnnotation(DublinCoreVocabulary.CREATOR.getIRI().toURI(),  factory.getSKOSUntypedConstant("Simon Jupp", "en"));
         // todo need to work on typed on objects
         //factory.getSKOSAnnotationsByURI(DublinCoreVocabulary.CREATOR.getURI(),  factory.getSKOSTypedConstant("String", "Simon Jupp"));
 

@@ -1,7 +1,6 @@
 package uk.ac.manchester.cs.skos.properties;
 
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.skos.SKOSAnnotation;
 import org.semanticweb.skos.SKOSEntity;
 import org.semanticweb.skos.SKOSLiteral;

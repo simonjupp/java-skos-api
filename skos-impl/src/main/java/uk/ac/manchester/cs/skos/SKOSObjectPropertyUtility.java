@@ -1,6 +1,7 @@
 package uk.ac.manchester.cs.skos;
 
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -69,9 +70,9 @@ public class SKOSObjectPropertyUtility {
 
     private void processProperty(OWLObjectProperty prop, OWLOntology ont) {
 
-        if (!prop.getSuperProperties(ont).isEmpty()) {
+        if (!EntitySearcher.getSuperProperties(prop, ont).isEmpty()) {
             tempProperty.put(prop.getIRI().toURI(), prop);
-            for(OWLObjectPropertyExpression sup : prop.getSuperProperties(ont)) {
+            for(OWLObjectPropertyExpression sup : EntitySearcher.getSuperProperties(prop, ont)) {
                 processProperty(sup.asOWLObjectProperty(), ont);
             }
         }

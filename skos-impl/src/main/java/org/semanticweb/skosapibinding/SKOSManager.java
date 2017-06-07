@@ -1,8 +1,11 @@
 package org.semanticweb.skosapibinding;
 
+import com.google.common.base.Optional;
+
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.ChangeApplied;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
 import org.semanticweb.skos.*;
 import uk.ac.manchester.cs.skos.SKOSDataFactoryImpl;
@@ -68,7 +71,7 @@ public class SKOSManager implements SKOSContentManager {
         skosVocabularies = new HashMap<URI, SKOSDatasetImpl>();
 
         for (OWLOntology ont : man.getOntologies()) {
-            IRI iri = ont.getOntologyID().getOntologyIRI();
+            IRI iri = ont.getOntologyID().getOntologyIRI().get();
             if (iri == null) {
                 iri = IRI.generateDocumentIRI();
             }
@@ -221,17 +224,16 @@ public class SKOSManager implements SKOSContentManager {
 
         List<SKOSChange> succesfulChanges = new ArrayList<SKOSChange>();
 
-        List<OWLOntologyChange> OWLChange;// = new ArrayList<OWLOntologyChange>();
+        ChangeApplied OWLChange = null;
+        
         try {
             OWLChange = man.applyChanges(ch);
         } catch (OWLOntologyChangeException e) {
             throw new SKOSChangeException(newChanges.get(e.getChange()), e);
         }
 
-        for (OWLOntologyChange ch1 : OWLChange) {
-            if (newChanges.containsKey(ch1)) {
-                succesfulChanges.add(newChanges.get(ch1));
-            }
+        if (null != OWLChange && OWLChange.equals(ChangeApplied.SUCCESSFULLY)) {
+            succesfulChanges.addAll(newChanges.values());
         }
         return succesfulChanges;
     }
@@ -245,7 +247,8 @@ public class SKOSManager implements SKOSContentManager {
 
         List<SKOSChange> succesfulChanges = new ArrayList<SKOSChange>();
 
-        List<OWLOntologyChange> OWLChange = new ArrayList<OWLOntologyChange>();
+        ChangeApplied OWLChange = null;
+        
         try {
             OWLAxiomChange cha;
             if (change.isAdd()) {
