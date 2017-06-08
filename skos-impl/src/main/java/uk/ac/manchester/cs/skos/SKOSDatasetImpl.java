@@ -1,6 +1,7 @@
 package uk.ac.manchester.cs.skos;
 
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
 import org.semanticweb.owlapi.util.PropertyAssertionValueShortFormProvider;
 import org.semanticweb.skos.*;
@@ -95,7 +96,7 @@ public class SKOSDatasetImpl implements SKOSDataset {
         if (owlOntology.getOntologyID().getOntologyIRI() == null) {
             return URI.create("http://skosapi.sourceforge.net/anonymous/" + Math.random());
         }
-        return owlOntology.getOntologyID().getOntologyIRI().toURI();
+        return owlOntology.getOntologyID().getOntologyIRI().get().toURI();
     }
 
     public Set<SKOSConceptScheme> getSKOSConceptSchemes() {
@@ -192,7 +193,7 @@ public class SKOSDatasetImpl implements SKOSDataset {
 
     private SKOSEntity entityCreationHandler(OWLNamedIndividual ind) {
 
-        for (OWLClassExpression desc : ind.getTypes(owlOntology)) {
+        for (OWLClassExpression desc : EntitySearcher.getTypes(ind, owlOntology)) {
 
             if (desc instanceof OWLClass) {
 
@@ -392,7 +393,7 @@ public class SKOSDatasetImpl implements SKOSDataset {
 
         AnnotationVisitor annoVis = new AnnotationVisitor(skosManContent);
 
-        for (OWLAnnotation anno : ind.asOWLNamedIndividual().getAnnotations(owlOntology)) {
+        for (OWLAnnotation anno : EntitySearcher.getAnnotations(ind.asOWLNamedIndividual(), owlOntology)) {
 
             OWLAnnotationValue value = anno.getValue();
             value.accept(annoVis);
@@ -509,7 +510,7 @@ public class SKOSDatasetImpl implements SKOSDataset {
         OWLDataPropertyExpression prop2 = man.getOWLDataFactory().getOWLDataProperty(IRI.create(SKOSRDFVocabulary.ALTLABEL.getURI()));
         OWLDataPropertyExpression prop3 = man.getOWLDataFactory().getOWLDataProperty(IRI.create(SKOSRDFVocabulary.HIDDENLABEL.getURI()));
 
-        List<OWLPropertyExpression<?,?>> list = new ArrayList<OWLPropertyExpression<?,?>>();
+        List<OWLPropertyExpression> list = new ArrayList<OWLPropertyExpression>();
         list.add(prop3);
         list.add(prop2);
         list.add(prop1);

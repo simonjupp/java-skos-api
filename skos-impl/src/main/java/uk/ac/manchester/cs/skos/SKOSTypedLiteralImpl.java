@@ -45,7 +45,7 @@ public class SKOSTypedLiteralImpl implements SKOSTypedLiteral {
     public SKOSTypedLiteralImpl(OWLDataFactory factory, SKOSDataType dataType, String literal) {
         this.literal = literal;
         this.type = (SKOSDataTypeImpl) dataType;
-        constant = factory.getOWLTypedLiteral(literal, type.getAsOWLDataType());
+        constant = factory.getOWLLiteral(literal, type.getAsOWLDataType());
     }
 
     public String getLiteral() {

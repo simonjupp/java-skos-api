@@ -5,7 +5,7 @@
     <parent>
         <artifactId>skos-api</artifactId>
         <groupId>skos-api</groupId>
-        <version>3.1</version>
+        <version>3.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,13 +16,19 @@
         <dependency>
             <groupId>skos-api</groupId>
             <artifactId>skos-core</artifactId>
-            <version>3.1</version>
+            <version>3.2</version>
         </dependency>
 
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
-            <artifactId>owlapi-distribution</artifactId>
-            <version>3.4.10</version>
+            <artifactId>owlapi-osgidistribution</artifactId>
+            <version>4.2.8</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
         </dependency>
 
     </dependencies>

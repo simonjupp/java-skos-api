@@ -34,7 +34,7 @@
     <groupId>skos-api</groupId>
     <artifactId>skos-api</artifactId>
     <packaging>pom</packaging>
-    <version>3.1</version>
+    <version>3.2</version>
     <modules>
         <module>skos-core</module>
         <module>skos-impl</module>
